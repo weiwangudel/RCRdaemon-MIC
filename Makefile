@@ -11,7 +11,7 @@
 
 
 DEFINES += -D MICACCESSAPI -D LINUX
-CFLAGS += -m64 -g -O0 $(DEFINES)
+CFLAGS += -m64 -g -O3 $(DEFINES)
 LIBPATH = -L/opt/intel/mic/sysmgmt/sdk/lib/Linux
 
 LDFLAGS = $(LIBPATH) $(SCIF_LIBPATH) -lMicAccessSDK -lscif -lpthread

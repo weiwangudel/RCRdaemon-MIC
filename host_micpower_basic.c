@@ -16,10 +16,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "papi_test.h"
+#include "host_micpower_basic.h"
 
 #define NUM_EVENTS 1
 
-int main (int argc, char **argv)
+int  RCRMICPowerCheck ()
 {
 
         int retval,cid,numcmp;
@@ -32,7 +33,7 @@ int main (int argc, char **argv)
 	const PAPI_component_info_t *cmpinfo = NULL;
 
         /* Set TESTS_QUIET variable */
-        tests_quiet( argc, argv );      
+        //tests_quiet( argc, argv );      
 
 	/* PAPI Initialization */
 	retval = PAPI_library_init( PAPI_VER_CURRENT );

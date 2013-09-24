@@ -65,6 +65,7 @@ int main()
 			fprintf(stderr, "%s\n", MicGetErrorString(retVal));
 			return retVal;
 		}
+        while (1) {
 		// API call example: get and display the power usage.
 		retVal = MicGetPowerUsage(accessHandle, &powerUsage);
 		if (retVal != MIC_ACCESS_API_SUCCESS) {
@@ -74,7 +75,7 @@ int main()
 			return retVal;
 		}
 		printf("Current Power Usage: %u\n", powerUsage.total0.prr);
-
+        }
 		// Close adapter
 		retVal = MicCloseAdapter(accessHandle);
 		if (retVal != MIC_ACCESS_API_SUCCESS) {
