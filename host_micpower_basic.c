@@ -20,6 +20,10 @@
 
 #define NUM_EVENTS 1
 
+void update_blackboard() {
+
+}
+
 int  RCRMICPowerCheck ()
 {
 
@@ -67,7 +71,10 @@ int  RCRMICPowerCheck ()
 	  				test_fail( __FILE__, __LINE__, 
 	  								"PAPI_event_code_to_name", retval );
 	  		}
-
+            // Weiif (0 != strncmp(event_name, "host_micpower:::mic0:tot0", 25) ) {
+	  		// Wei    r = PAPI_enum_cmp_event( &code, PAPI_ENUM_EVENTS, cid );
+            // Wei    continue;
+            // Wei}
 	  		if (!TESTS_QUIET) printf("%#x %s ",code,event_name);
 
 	  		EventSet = PAPI_NULL;
@@ -97,7 +104,7 @@ int  RCRMICPowerCheck ()
 	  		if (!TESTS_QUIET) printf(" value: %lld\n",values[0]);
 
             // store to shared memory
-            
+            update_blackboard();
 
 	  		retval = PAPI_cleanup_eventset( EventSet );
 	  		if (retval != PAPI_OK) {
@@ -118,6 +125,7 @@ int  RCRMICPowerCheck ()
 	    if (total_events==0) {
            test_skip(__FILE__,__LINE__,"No events from host_micpower found",0);
 	    } 
+       usleep(1000); 
       }  // end for while 1
     }   // end for components
 
