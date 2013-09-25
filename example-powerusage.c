@@ -75,6 +75,7 @@ int main()
 			return retVal;
 		}
 		printf("Current Power Usage: %u\n", powerUsage.total0.prr);
+        usleep(10000);
         }
 		// Close adapter
 		retVal = MicCloseAdapter(accessHandle);

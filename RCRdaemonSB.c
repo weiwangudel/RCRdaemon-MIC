@@ -2,6 +2,7 @@
 #include <stdio.h>  // for printf
 #include <time.h>   // for time functions
 #include "host_micpower_basic.h"
+#include "RCR.bb.h"
 
 volatile int64_t ** tempMeter; // used to store location of current socket tempature
 volatile int64_t ** energyMeter; // used to store location of energy used to date
@@ -11,6 +12,7 @@ uint64_t *energySave;
 
 struct timespec adaptTimeStart;  // used for measured time
 struct timespec adaptTimeStop;  // used for measured time
+
 
 int main(int argc, char *argv[]) {
 	int logPrint = 0;
@@ -25,6 +27,10 @@ int main(int argc, char *argv[]) {
 	}
 
 	//building shared memory region
+    buildBlackboard();
+    
+    //initializing shared memory region
+    initBlackboard();
 
 	struct timespec interval, freq, remainder;
 	interval.tv_sec = 0;

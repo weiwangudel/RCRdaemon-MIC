@@ -17,12 +17,12 @@
 #include <stdlib.h>
 #include "papi_test.h"
 #include "host_micpower_basic.h"
+#include "RCR.bb.h"
 
 #define NUM_EVENTS 1
+long long g_time_e;
+long long g_time_s;
 
-void update_blackboard() {
-
-}
 
 int  RCRMICPowerCheck ()
 {
@@ -38,6 +38,8 @@ int  RCRMICPowerCheck ()
 
     /* Set TESTS_QUIET variable */
     //tests_quiet( argc, argv );      
+ 
+    g_time_s = PAPI_get_real_usec();
 
 	/* PAPI Initialization */
 	retval = PAPI_library_init( PAPI_VER_CURRENT );
@@ -71,10 +73,10 @@ int  RCRMICPowerCheck ()
 	  				test_fail( __FILE__, __LINE__, 
 	  								"PAPI_event_code_to_name", retval );
 	  		}
-            // Weiif (0 != strncmp(event_name, "host_micpower:::mic0:tot0", 25) ) {
-	  		// Wei    r = PAPI_enum_cmp_event( &code, PAPI_ENUM_EVENTS, cid );
-            // Wei    continue;
-            // Wei}
+            if (0 != strncmp(event_name, "host_micpower:::mic0:tot0", 25) ) {
+	  		    r = PAPI_enum_cmp_event( &code, PAPI_ENUM_EVENTS, cid );
+                continue;
+            }
 	  		if (!TESTS_QUIET) printf("%#x %s ",code,event_name);
 
 	  		EventSet = PAPI_NULL;
@@ -101,10 +103,12 @@ int  RCRMICPowerCheck ()
 	  				test_fail(__FILE__, __LINE__, "PAPI_stop()",retval);
 	  		}
 
-	  		if (!TESTS_QUIET) printf(" value: %lld\n",values[0]);
+	  		if (!TESTS_QUIET) printf(" value: %lld ",values[0]);
 
+            g_time_e = PAPI_get_real_usec();
             // store to shared memory
-            update_blackboard();
+            update_blackboard(event_name, values[0], g_time_e-g_time_s);
+            g_time_s = g_time_e;
 
 	  		retval = PAPI_cleanup_eventset( EventSet );
 	  		if (retval != PAPI_OK) {
@@ -125,7 +129,7 @@ int  RCRMICPowerCheck ()
 	    if (total_events==0) {
            test_skip(__FILE__,__LINE__,"No events from host_micpower found",0);
 	    } 
-       usleep(1000); 
+      usleep(50000);
       }  // end for while 1
     }   // end for components
 
