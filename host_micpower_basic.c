@@ -23,7 +23,7 @@
 int  RCRMICPowerCheck ()
 {
 
-        int retval,cid,numcmp;
+    int retval,cid,numcmp;
 	int EventSet = PAPI_NULL;
 	long long values[NUM_EVENTS];
 	int code;
@@ -32,8 +32,8 @@ int  RCRMICPowerCheck ()
 	int r;
 	const PAPI_component_info_t *cmpinfo = NULL;
 
-        /* Set TESTS_QUIET variable */
-        //tests_quiet( argc, argv );      
+    /* Set TESTS_QUIET variable */
+    //tests_quiet( argc, argv );      
 
 	/* PAPI Initialization */
 	retval = PAPI_library_init( PAPI_VER_CURRENT );
@@ -41,84 +41,90 @@ int  RCRMICPowerCheck ()
 	   test_fail(__FILE__, __LINE__,"PAPI_library_init failed\n",retval);
 	}
 
-        numcmp = PAPI_num_components();
+    numcmp = PAPI_num_components();
 	for(cid=0; cid<numcmp; cid++) {
 
-			if ( (cmpinfo = PAPI_get_component_info(cid)) == NULL) {
-					test_fail(__FILE__, __LINE__,"PAPI_get_component_info failed\n", 0);
-			}
-			if (!TESTS_QUIET) {
-					printf("\tComponent %d - %s\n", cid, cmpinfo->name);
-			}
+	  if ( (cmpinfo = PAPI_get_component_info(cid)) == NULL) {
+	  		test_fail(__FILE__, __LINE__,"PAPI_get_component_info failed\n", 0);
+	  }
+	  //if (!TESTS_QUIET) {
+	  //		printf("\tComponent %d - %s\n", cid, cmpinfo->name);
+	  //}
 
-			if ( 0 != strncmp(cmpinfo->name,"host_micpower",13)) {
-					continue;
-			}
-            while (1) {
-			code = PAPI_NATIVE_MASK;
+	  if ( 0 != strncmp(cmpinfo->name,"host_micpower",13)) {
+	  		continue;
+	  }
 
-			r = PAPI_enum_cmp_event( &code, PAPI_ENUM_FIRST, cid );
+      // trap in host_micpower  
+	  code = PAPI_NATIVE_MASK;
+      while (1) {
+	    r = PAPI_enum_cmp_event( &code, PAPI_ENUM_FIRST, cid );
 
-			while ( r == PAPI_OK ) {
-					retval = PAPI_event_code_to_name( code, event_name );
-					if ( retval != PAPI_OK ) {
-							printf("Error translating %#x\n",code);
-							test_fail( __FILE__, __LINE__, 
-											"PAPI_event_code_to_name", retval );
-					}
+	    while ( r == PAPI_OK ) {
+	  		retval = PAPI_event_code_to_name( code, event_name );
+	  		if ( retval != PAPI_OK ) {
+	  				printf("Error translating %#x\n",code);
+	  				test_fail( __FILE__, __LINE__, 
+	  								"PAPI_event_code_to_name", retval );
+	  		}
 
-					if (!TESTS_QUIET) printf("%#x %s ",code,event_name);
+	  		if (!TESTS_QUIET) printf("%#x %s ",code,event_name);
 
-					EventSet = PAPI_NULL;
+	  		EventSet = PAPI_NULL;
 
-					retval = PAPI_create_eventset( &EventSet );
-					if (retval != PAPI_OK) {
-							test_fail(__FILE__, __LINE__, 
-											"PAPI_create_eventset()",retval);
-					}
+	  		retval = PAPI_create_eventset( &EventSet );
+	  		if (retval != PAPI_OK) {
+	  				test_fail(__FILE__, __LINE__, 
+	  								"PAPI_create_eventset()",retval);
+	  		}
 
-					retval = PAPI_add_event( EventSet, code );
-					if (retval != PAPI_OK) {
-							test_fail(__FILE__, __LINE__, 
-											"PAPI_add_event()",retval);
-					}
+	  		retval = PAPI_add_event( EventSet, code );
+	  		if (retval != PAPI_OK) {
+	  				test_fail(__FILE__, __LINE__, 
+	  								"PAPI_add_event()",retval);
+	  		}
 
-					retval = PAPI_start( EventSet);
-					if (retval != PAPI_OK) {
-							test_fail(__FILE__, __LINE__, "PAPI_start()",retval);
-					}
+	  		retval = PAPI_start( EventSet);
+	  		if (retval != PAPI_OK) {
+	  				test_fail(__FILE__, __LINE__, "PAPI_start()",retval);
+	  		}
 
-					retval = PAPI_stop( EventSet, values);
-					if (retval != PAPI_OK) {
-							test_fail(__FILE__, __LINE__, "PAPI_stop()",retval);
-					}
+	  		retval = PAPI_stop( EventSet, values);
+	  		if (retval != PAPI_OK) {
+	  				test_fail(__FILE__, __LINE__, "PAPI_stop()",retval);
+	  		}
 
-					if (!TESTS_QUIET) printf(" value: %lld\n",values[0]);
+	  		if (!TESTS_QUIET) printf(" value: %lld\n",values[0]);
 
-					retval = PAPI_cleanup_eventset( EventSet );
-					if (retval != PAPI_OK) {
-							test_fail(__FILE__, __LINE__, 
-											"PAPI_cleanup_eventset()",retval);
-					}
+            // store to shared memory
+            
 
-					retval = PAPI_destroy_eventset( &EventSet );
-					if (retval != PAPI_OK) {
-							test_fail(__FILE__, __LINE__, 
-											"PAPI_destroy_eventset()",retval);
-					}
+	  		retval = PAPI_cleanup_eventset( EventSet );
+	  		if (retval != PAPI_OK) {
+	  				test_fail(__FILE__, __LINE__, 
+	  								"PAPI_cleanup_eventset()",retval);
+	  		}
 
-					total_events++;
-					r = PAPI_enum_cmp_event( &code, PAPI_ENUM_EVENTS, cid );
-			}
-	}
+	  		retval = PAPI_destroy_eventset( &EventSet );
+	  		if (retval != PAPI_OK) {
+	  				test_fail(__FILE__, __LINE__, 
+	  								"PAPI_destroy_eventset()",retval);
+	  		}
 
-	if (total_events==0) {
+	  		total_events++;
+	  		r = PAPI_enum_cmp_event( &code, PAPI_ENUM_EVENTS, cid );
+	    }
 
-	   test_skip(__FILE__,__LINE__,"No events from host_micpower found",0);
-	}
-    }
+	    if (total_events==0) {
+           test_skip(__FILE__,__LINE__,"No events from host_micpower found",0);
+	    } 
+      }  // end for while 1
+    }   // end for components
 
-	test_pass( __FILE__, NULL, 0 );
+//	test_pass( __FILE__, NULL, 0 );
+    if ( PAPI_is_initialized(  ) )
+        PAPI_shutdown(  );
+
 		
 	return 0;
 }

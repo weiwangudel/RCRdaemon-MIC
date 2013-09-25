@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 	//       do that with LINUX(and I'll never get it approved by the powers that run LINUX --
 	//       maybe Kitten/LXK
 
-	while (1) {
+//	while (1) {
 		clock_gettime(CLOCK_MONOTONIC, &adaptTimeStart);
 		
         RCRMICPowerCheck();
@@ -50,12 +50,12 @@ int main(int argc, char *argv[]) {
 		}
 
 		if (logPrint) {
-			int64_t temp0 = *tempMeter[0];
-			int64_t temp1 = *tempMeter[1];
-			uint64_t energy0 = *energyMeter[0];
-			uint64_t energy1 = *energyMeter[1];
+//			int64_t temp0 = *tempMeter[0];
+//			int64_t temp1 = *tempMeter[1];
+//			uint64_t energy0 = *energyMeter[0];
+//			uint64_t energy1 = *energyMeter[1];
 		}
-	}
+//	}
 
 	return 0;
 }
