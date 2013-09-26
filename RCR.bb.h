@@ -2,6 +2,7 @@
 int64_t buildBlackboard();
 void updateBlackboard();
 void initBlackboard() ;
+void energyDaemon_initBlackboard() ;
 struct PAPI_MIC_COUNTERS {
         double total0;
         double total1;

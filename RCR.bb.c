@@ -65,3 +65,22 @@ void update_blackboard(char* e_name, long long value, long long interval) {
   node->total0 += value*(1.0e-6)*interval*(1.0e-6); 
   printf("accumulative: %f\n", node->total0);
 }
+double readBlackboard(unsigned int counter, double *value) { 
+  struct PAPI_MIC_COUNTERS* node = (struct PAPI_MIC_COUNTERS*)(base() );
+  printf("in readBlackboard:%f\n", node->total0);
+  *value = node->total0;
+  return *value;
+}
+
+
+void energyDaemon_initBlackboard() {
+  int fd = shm_open(RCRFILE_NAME, O_RDONLY, 0);                                  
+                                                                                 
+  if(fd == -1) {                                                                 
+    perror("shm_open "RCRFILE_NAME);                                             
+    printf("Please create it at :/dev/shm/RCRMICFile\n");                           
+    exit(-1);
+  }                                                                              
+  ftruncate(fd, MAX_RCRFILE_SIZE);                                               
+  bbMem = mmap(NULL, MAX_RCRFILE_SIZE, PROT_READ, MAP_SHARED, fd, 0);            
+}

@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     //initializing shared memory region
     initBlackboard();
 
-	struct timespec interval, freq, remainder;
+	struct timespec interval, remainder;
 	interval.tv_sec = 0;
 	interval.tv_nsec = 1000000;  // currently aim for ~1/1000 second
 
