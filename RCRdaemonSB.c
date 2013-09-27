@@ -1,7 +1,7 @@
 #include <stdint.h> // for int64_t
 #include <stdio.h>  // for printf
 #include <time.h>   // for time functions
-#include "host_micpower_basic.h"
+#include "micpower_basic.h"
 #include "RCR.bb.h"
 
 volatile int64_t ** tempMeter; // used to store location of current socket tempature
