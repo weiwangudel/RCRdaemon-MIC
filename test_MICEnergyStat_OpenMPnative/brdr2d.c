@@ -99,7 +99,7 @@ int main(int argc, char *argv[]){
 
   energyDaemonTEStart();
   while (derivarr[0]<=tfinal && step<=Nsteps + 1 && stable){
-
+    energyDaemonEnter();
     step=step+1;
     derivarr[0]+=dt;        // update time (msec) 
 	if (blocktimenum>0)                
@@ -119,6 +119,7 @@ int main(int argc, char *argv[]){
        
 
       } // blockonoff
+      energyDaemonExit("file", 122);
       energyDaemonEnter();
 #pragma omp parallel for private (Ystep) firstprivate(Xstep)  num_threads(240)
 //{  // begin acc
@@ -411,7 +412,7 @@ int main(int argc, char *argv[]){
   energyDaemonExit("file", 411);
 //bcs();
 
-
+    energyDaemonEnter();
 	{
 	  int ii;
 	  double R0, R1;
@@ -445,7 +446,7 @@ int main(int argc, char *argv[]){
 	    
 	  }
 	}
-	
+   energyDaemonExit("file", 449);	
    energyDaemonEnter();
 #pragma omp parallel for private (Ystep) firstprivate(Xstep)  num_threads(240)
 //{  //begin openacc
