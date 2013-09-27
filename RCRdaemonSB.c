@@ -46,8 +46,9 @@ int main(int argc, char *argv[]) {
 
 //	while (1) {
 		clock_gettime(CLOCK_MONOTONIC, &adaptTimeStart);
-		
+	    printf("have you come to here?1");	
         RCRMICPowerCheck();
+	    printf("have you come to here?2");	
 
 		clock_gettime(CLOCK_MONOTONIC, &adaptTimeStop);
 
