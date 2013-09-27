@@ -18,6 +18,8 @@
 #include "papi_test.h"
 
 #define NUM_EVENTS 1
+long long g_time_e;
+long long g_time_s;
 
 int RCRMICPowerCheck()
 {
@@ -33,6 +35,7 @@ int RCRMICPowerCheck()
 
     ///* Set TESTS_QUIET variable */
     //tests_quiet( argc, argv );      
+    g_time_s = PAPI_get_real_usec();
 
 	/* PAPI Initialization */
 	retval = PAPI_library_init( PAPI_VER_CURRENT );
@@ -51,8 +54,12 @@ int RCRMICPowerCheck()
 	      printf("\tComponent %d - %s\n", cid, cmpinfo->name);
 	   }
 
-	   code = PAPI_NATIVE_MASK;
+       if ( 0 != strncmp(cmpinfo->name,"micpower",8)) {
+            continue;
+       }
 
+	   code = PAPI_NATIVE_MASK;
+      while (1) {
            r = PAPI_enum_cmp_event( &code, PAPI_ENUM_FIRST, cid );
 
 	   while ( r == PAPI_OK ) {
@@ -63,7 +70,7 @@ int RCRMICPowerCheck()
                             "PAPI_event_code_to_name", retval );
 	      }
 
-	      if (!strncmp(event_name,"micpower",8)) {
+	      if (!strncmp(event_name,"micpower:::tot0", 15)) {
 	         if (!TESTS_QUIET) printf("%#x %s ",code,event_name);
 	     
 	         EventSet = PAPI_NULL;
@@ -91,6 +98,10 @@ int RCRMICPowerCheck()
 		 }
 
 	         if (!TESTS_QUIET) printf(" value: %lld\n",values[0]);
+             g_time_e = PAPI_get_real_usec();
+             // store to shared memory
+             update_blackboard(event_name, values[0], g_time_e-g_time_s);
+             g_time_s = g_time_e;
 
 	         retval = PAPI_cleanup_eventset( EventSet );
 	         if (retval != PAPI_OK) {
@@ -108,7 +119,9 @@ int RCRMICPowerCheck()
 	      }
 	      r = PAPI_enum_cmp_event( &code, PAPI_ENUM_EVENTS, cid );
 	   }
-        }
+       //usleep(50000);
+      }
+     }
 
 	if (total_events==0) {
 
