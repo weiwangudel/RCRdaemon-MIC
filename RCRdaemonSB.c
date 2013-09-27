@@ -44,11 +44,10 @@ int main(int argc, char *argv[]) {
 	//       do that with LINUX(and I'll never get it approved by the powers that run LINUX --
 	//       maybe Kitten/LXK
 
-//	while (1) {
+	while (1) {
 		clock_gettime(CLOCK_MONOTONIC, &adaptTimeStart);
-	    printf("have you come to here?1");	
+
         RCRMICPowerCheck();
-	    printf("have you come to here?2");	
 
 		clock_gettime(CLOCK_MONOTONIC, &adaptTimeStop);
 
@@ -62,7 +61,7 @@ int main(int argc, char *argv[]) {
 //			uint64_t energy0 = *energyMeter[0];
 //			uint64_t energy1 = *energyMeter[1];
 		}
-//	}
+	}
 
 	return 0;
 }

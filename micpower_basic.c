@@ -51,7 +51,7 @@ int RCRMICPowerCheck()
 	      if ( (cmpinfo = PAPI_get_component_info(cid)) == NULL) {
 	         test_fail(__FILE__, __LINE__,"PAPI_get_component_info failed\n", 0);
 	      }
-	      printf("\tComponent %d - %s\n", cid, cmpinfo->name);
+	      //printf("\tComponent %d - %s\n", cid, cmpinfo->name);
 	   }
 
        if ( 0 != strncmp(cmpinfo->name,"micpower",8)) {
@@ -69,8 +69,12 @@ int RCRMICPowerCheck()
 	         test_fail( __FILE__, __LINE__, 
                             "PAPI_event_code_to_name", retval );
 	      }
+          if (0 != strncmp(event_name, "micpower:::tot0", 15) ) {
+                r = PAPI_enum_cmp_event( &code, PAPI_ENUM_EVENTS, cid );
+                continue;
+          }
 
-	      if (!strncmp(event_name,"micpower:::tot0", 15)) {
+	      //if (!strncmp(event_name,"micpower:::tot0", 15)) {
 	         if (!TESTS_QUIET) printf("%#x %s ",code,event_name);
 	     
 	         EventSet = PAPI_NULL;
@@ -116,7 +120,7 @@ int RCRMICPowerCheck()
 		 }
 
 	         total_events++;
-	      }
+	      //}
 	      r = PAPI_enum_cmp_event( &code, PAPI_ENUM_EVENTS, cid );
 	   }
        //usleep(50000);
