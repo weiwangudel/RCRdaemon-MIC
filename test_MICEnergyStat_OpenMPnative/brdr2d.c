@@ -478,15 +478,17 @@ datarr[(step-1)%2][13][Xstep][Ystep] =
     }
   energyDaemonExit("file", 478); 
 //}  //end openacc
-
+  energyDaemonEnter();
     if (step%rpN==0) {          // update user
       printf("%4.4e msec, Vm(%d,%d): %3.2f mV\n",derivarr[0],mNx,mNy,datarr[step%2][0][mNx][mNy]); 
 
       fflush(stdout);
 
     } 
-
+    energyDaemonExit("file", 488);
+    energyDaemonEnter();
     if (step%wN==0) output();   // write data to files
+    energyDaemonExit("file", 491);
 
   }  // end time loop
   energyDaemonTEStop();

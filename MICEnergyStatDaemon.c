@@ -137,10 +137,10 @@ void energyDaemonTerm()
   for (l = 0; l < num_loops; l++) {
     appTotalEnergy += loopEnergies[l].energySum;
     appTotalTime += loopEnergies[l].timeSum;
-    printf("Loop %d <line-%d> - Time %f Total energy consumed %f Ave. Power Level %f\n",
+    printf("Loop %d <line-%d> - Time %f Total energy consumed %f Ave. Power Level %f Sampled times %d \n",
 	 l, loop_mapping[l], loopEnergies[l].timeSum, 
 	 loopEnergies[l].energySum,
-	 loopEnergies[l].energySum/loopEnergies[l].timeSum);
+	 loopEnergies[l].energySum/loopEnergies[l].timeSum, loopEnergies[l].sampleCounter);
   }
   
   double joule =  appTotalEnergy;
@@ -232,9 +232,7 @@ static void lapPowerExit(uint32_t loop) {
   //  printf("Trying to lap energy usage before initialization or after termination\n");
   //  return;
   //}
-  clock_gettime(CLOCK_MONOTONIC, &finTime);
-  double diffTime = (finTime.tv_sec - saveTime.tv_sec)+((finTime.tv_nsec - saveTime.tv_nsec)*10e-10);
- 
+   
   loopEnergies[loop].sampleCounter++;
  
   double e ;
@@ -242,6 +240,9 @@ static void lapPowerExit(uint32_t loop) {
   loopEnergies[loop].energySum += e - initEnergy;
   initEnergy = e; // reset value
 
+  clock_gettime(CLOCK_MONOTONIC, &finTime);
+  double diffTime = (finTime.tv_sec - saveTime.tv_sec)+((finTime.tv_nsec - saveTime.tv_nsec)*10e-10);
+  printf("iteration: %d, loop: %d, time:%f, energy: %f\n", loopEnergies[loop].sampleCounter,loop,diffTime, loopEnergies[loop].energySum);
   loopEnergies[loop].timeSum += diffTime; 
   // reset values
   saveTime = finTime;
