@@ -123,7 +123,7 @@ int RCRMICPowerCheck()
 	      //}
 	      r = PAPI_enum_cmp_event( &code, PAPI_ENUM_EVENTS, cid );
 	   }
-       //usleep(50000);
+       usleep(50000);
       }
      }
 

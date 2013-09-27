@@ -67,7 +67,7 @@ void update_blackboard(char* e_name, long long value, long long interval) {
 }
 double readBlackboard(unsigned int counter, double *value) { 
   struct PAPI_MIC_COUNTERS* node = (struct PAPI_MIC_COUNTERS*)(base() );
-  printf("in readBlackboard:%f\n", node->total0);
+  //printf("in readBlackboard:%f\n", node->total0);
   *value = node->total0;
   return *value;
 }
