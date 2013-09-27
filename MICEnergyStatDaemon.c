@@ -77,7 +77,6 @@ static void printPower()
   // update program total
   appTotalEnergy += totalEnergy;
   appTotalTime += diffTime;
-  printf("appTotalEnergy:%f\n", appTotalEnergy);  
   // reset values
   saveTime = finTime;
   return;
